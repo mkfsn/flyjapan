@@ -1,71 +1,52 @@
 package flyjapan
 
 import (
-	"sort"
+	"time"
 )
 
 type Fare struct {
-	BaseFare     int    `json:"baseFare"`
-	BookingClass string `json:"bookingClass"`
-	BookingType  string `json:"bookingType"`
-	Discounted   bool   `json:"discounted"`
-	Fare         int    `json:"fare"`
-	FareCode     string `json:"fareCode"`
-	FareId       string `json:"fareId"`
-	IsMin        bool   `json:"isMin"`
-	IsSale       bool   `json:"isSale"`
-	IsStaff      bool   `json:"isStaff"`
-	Seat         int    `json:"seat"`
+	Seat     int
+	BaseFare int
+}
+
+type Airport struct {
+	Code string // e.g. TPE, KIX, HND
+	Name string
 }
 
 type Flight struct {
-	ArrivalTime       string          `json:"arrivalTime"`
-	ArrivalTimezone   string          `json:"arrivalTimezone"`
-	DepartureTime     string          `json:"departureTime"`
-	DepartureTimezone int             `json:"departureTimezone"`
-	Destination       string          `json:"destination"`
-	DestinationCode   string          `json:"destinationCode"`
-	Fares             map[string]Fare `json:"fares"`
-	FlightDuration    int             `json:"flightDuration"`
-	FlightId          string          `json:"flightId"`
-	FlightNumber      string          `json:"flightNumber"`
-	Origin            string          `json:"origin"`
-	OriginCode        string          `json:"originCode"`
-	TaxAdult          string          `json:"taxAdult"`
-	TaxChild          int             `json:"taxChild"`
-	TaxInfant         int             `json:"taxInfant"`
+	DepartureTime time.Time
+	ArrivalTime   time.Time
+	FlightID      string
+	Origin        Airport
+	Destination   Airport
+	Fares         []*Fare // TWD
+	TaxAdult      int
+	TaxChild      int
+	TaxInfant     int
 }
 
-func (f Flight) CheapestFare() Fare {
-	var key string
-	min := -1
-	for k, v := range f.Fares {
-		if min == -1 || min > v.BaseFare {
-			min = v.BaseFare
-			key = k
+func (f *Flight) Cheapest() int {
+	if len(f.Fares) == 0 {
+		return 0
+	}
+	min := f.Fares[0].BaseFare
+	for i := 1; i < len(f.Fares); i++ {
+		if f.Fares[i].BaseFare < min {
+			min = f.Fares[i].BaseFare
 		}
 	}
-	return f.Fares[key]
+	return min
 }
 
 type Flights []Flight
 
-func (flights Flights) Cheapest() Flight {
-	if len(flights) == 0 {
-		return Flight{}
+func (flights Flights) FilterBy(filter FilterFunc) Flights {
+	var res Flights
+	for _, f := range flights {
+		if filter(f) {
+			res = append(res, f)
+		}
 	}
-	sort.Sort(flights)
-	return flights[0]
-}
-
-func (f Flights) Len() int {
-	return len(f)
-}
-
-func (f Flights) Swap(i, j int) {
-	f[i], f[j] = f[j], f[i]
-}
-
-func (f Flights) Less(i, j int) bool {
-	return f[i].CheapestFare().BaseFare < f[j].CheapestFare().BaseFare
+	return res
 }
