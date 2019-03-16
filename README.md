@@ -18,4 +18,4 @@ Feel free to ask for features!
 
 See [this example](//github.com/mkfsn/flyjapan/blob/master/examples/weekend.go)
 
-![image](https://user-images.githubusercontent.com/667169/54473567-7d491c80-4814-11e9-88bc-82c6ce7382f5.png)
+![image](https://user-images.githubusercontent.com/667169/54473678-e8dfb980-4815-11e9-96c7-9ff463f5da9c.png)
