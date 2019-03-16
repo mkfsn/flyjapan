@@ -1,2 +1,7 @@
 # binary
 flypeach
+
+#vendor
+!vendor
+vendor/*
+!vendor/vendor.json

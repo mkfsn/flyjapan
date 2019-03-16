@@ -9,6 +9,8 @@ import (
 
 	"github.com/mkfsn/flyjapan"
 	"github.com/mkfsn/flyjapan/peach"
+
+	. "github.com/logrusorgru/aurora"
 )
 
 func main() {
@@ -38,11 +40,28 @@ func fetchFlightToCity(searcher flyjapan.Searcher, city string) {
 					continue
 				}
 				dateFormat := "2006/01/02 15:04:05"
-				fmt.Printf("[%s(%v)->%s(%v)]%5v --> [%s(%v)->%s(%v)]%5v = %5v\n",
-					x.Origin.Code, x.DepartureTime.Format(dateFormat), x.Destination.Code, x.ArrivalTime.Format(dateFormat), a,
-					y.Origin.Code, y.DepartureTime.Format(dateFormat), y.Destination.Code, y.ArrivalTime.Format(dateFormat), b,
-					a+b,
+				fmt.Printf("%s%v%s%s%v%5v",
+					BgBlue(Black(fmt.Sprintf("[%s]", x.Origin.Code))),
+					BgMagenta(Black(x.DepartureTime.Format(dateFormat))),
+					BgGray(Black("->")),
+					BgBlue(Black(fmt.Sprintf("[%s]", x.Destination.Code))),
+					BgMagenta(Black(x.ArrivalTime.Format(dateFormat))),
+					BgBrown(Black(a)),
 				)
+				fmt.Printf(" + ")
+				fmt.Printf("%s%v%s%s%v%5v",
+					BgBlue(Black(fmt.Sprintf("[%s]", y.Origin.Code))),
+					BgMagenta(Black(y.DepartureTime.Format(dateFormat))),
+					BgGray(Black("->")),
+					BgBlue(Black(fmt.Sprintf("[%s]", y.Destination.Code))),
+					BgMagenta(Black(y.ArrivalTime.Format(dateFormat))),
+					BgBrown(Black(b)),
+				)
+				if a+b < 3000 {
+					fmt.Printf(" = %5v\n", BgGreen(Red(a+b)))
+				} else {
+					fmt.Printf(" = %5v\n", BgGreen(Black(a+b)))
+				}
 			}
 		}
 	}
