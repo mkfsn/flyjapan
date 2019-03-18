@@ -3,7 +3,7 @@
 ![image](https://img.shields.io/badge/PullRequests-welcome-green.svg)
 ![image](https://img.shields.io/badge/FeatureRequests-welcome-green.svg)
 
-I create this project as I want to know if there's some cheap flights to some cities of Japan in the incomming weekends.
+I create this project as I want to know if there  some cheap flights to some cities of Japan in the incomming weekends.
 
 There are three major LCCs which I'm planning to support in this project:
 
