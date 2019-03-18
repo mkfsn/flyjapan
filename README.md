@@ -1,4 +1,4 @@
-# Let's fly to Japan! 日本にいこう！
+# Let's go to Japan! 日本にいこう！
 
 ![image](https://img.shields.io/badge/PullRequests-welcome-green.svg)
 ![image](https://img.shields.io/badge/FeatureRequests-welcome-green.svg)
