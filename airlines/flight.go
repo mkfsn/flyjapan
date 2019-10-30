@@ -1,4 +1,4 @@
-package flyjapan
+package airlines
 
 import (
 	"time"

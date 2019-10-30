@@ -1,4 +1,4 @@
-package flyjapan
+package airlines
 
 type SortByBaseFare []Flight
 
@@ -12,5 +12,4 @@ func (f SortByBaseFare) Swap(i, j int) {
 
 func (f SortByBaseFare) Less(i, j int) bool {
 	return f[i].Cheapest() < f[j].Cheapest()
-
 }

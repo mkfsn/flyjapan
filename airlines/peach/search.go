@@ -7,10 +7,22 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/mkfsn/flyjapan"
+	"github.com/mkfsn/flyjapan/airlines"
 )
 
-func (p *peach) doRequest(ctx context.Context, q flyjapan.Query) ([]byte, error) {
+func (p *peach) Search(ctx context.Context, q airlines.Query) (airlines.Result, error) {
+	b, err := p.doRequest(ctx, q)
+	if err != nil {
+		return nil, err
+	}
+	res, err := extractFlightResultFromBytes(b)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (p *peach) doRequest(ctx context.Context, q airlines.Query) ([]byte, error) {
 	req, err := http.NewRequest("POST", "https://booking.flypeach.com/tw", parseQuery(q))
 	if err != nil {
 		return nil, err
@@ -30,6 +42,8 @@ func (p *peach) doRequest(ctx context.Context, q flyjapan.Query) ([]byte, error)
 		return nil, err
 	}
 	defer res.Body.Close()
+
+	// log.Printf("Jar.Cookies: %+v\n---\n", p.client.Jar.Cookies(req.URL))
 
 	// Check if the server sent compressed data
 	var reader io.ReadCloser

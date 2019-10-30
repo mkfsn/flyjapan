@@ -5,10 +5,10 @@ import (
 	"io"
 	"strings"
 
-	"github.com/mkfsn/flyjapan"
+	"github.com/mkfsn/flyjapan/airlines"
 )
 
-func parseQuery(q flyjapan.Query) io.Reader {
+func parseQuery(q airlines.Query) io.Reader {
 	data := map[string]interface{}{
 		"flight_search_parameter[0][departure_date]":         q.DepartureDate.Format("2006/01/02"),
 		"flight_search_parameter[0][return_date]":            q.ReturnDate.Format("2006/01/02"),

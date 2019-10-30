@@ -1,23 +1,9 @@
 package flyjapan
 
-type Result interface {
-	InBound() Flights
-	OutBound() Flights
-}
+import "github.com/mkfsn/flyjapan/airlines"
 
-type result struct {
-	inBound  Flights
-	outBound Flights
-}
-
-func (r *result) InBound() Flights {
-	return r.inBound
-}
-
-func (r *result) OutBound() Flights {
-	return r.outBound
-}
-
-func GenerateResult(inBound, outBound Flights) Result {
-	return &result{inBound: inBound, outBound: outBound}
+// FIXME(mkfsn)
+type Result struct {
+	Inbound  airlines.Flights
+	Outbound airlines.Flights
 }

@@ -1,4 +1,4 @@
-package flyjapan
+package airlines
 
 type FilterFunc func(f Flight) bool
 
