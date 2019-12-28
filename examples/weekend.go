@@ -11,17 +11,27 @@ import (
 	. "github.com/logrusorgru/aurora"
 	"github.com/mkfsn/flyjapan"
 	"github.com/mkfsn/flyjapan/airlines"
-	"github.com/mkfsn/flyjapan/airlines/peach"
+	"github.com/mkfsn/flyjapan/airlines/factory"
 )
 
+type config struct {
+	airline string
+}
+
 func main() {
+	var cfg config
+	flag.StringVar(&cfg.airline, "airline", string(airlines.AirlinePeach), "airline to query")
 	flag.Parse()
 	args := flag.Args()
 	if len(args) == 0 {
 		args = []string{"FUK", "HND", "KIX"}
 	}
 
-	airline, _ := peach.New()
+	airline, err := factory.CreateAirline(airlines.AirlineName((cfg.airline)))
+	if err != nil {
+		log.Fatalf("err: %v\n", err)
+	}
+
 	for _, city := range args {
 		queries := buildQueries(airline, city)
 		fetch(queries)
