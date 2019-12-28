@@ -10,7 +10,7 @@ type peach struct {
 	client *http.Client
 }
 
-func New() (airlines.Searcher, error) {
+func New() (airlines.Airline, error) {
 	jar, err := cookiejar.New(nil)
 	if err != nil {
 		return nil, err

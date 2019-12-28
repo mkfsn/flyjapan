@@ -1,9 +1,17 @@
 package airlines
 
-type Airline string
+import (
+	"context"
+)
+
+type AirlineName string
 
 const (
-	AirlinePeach   Airline = "peach"
-	AirlineTiger           = "tiger"
-	AirlineJetstar         = "jetstar"
+	AirlinePeach   AirlineName = "peach"
+	AirlineTiger               = "tiger"
+	AirlineJetstar             = "jetstar"
 )
+
+type Airline interface {
+	Search(context.Context, Query) (Result, error)
+}

@@ -18,7 +18,7 @@ type queryArguments struct {
 	DateFromTo         []dateFromTo
 	SourceAirport      string
 	DestinationAirport string
-	Airline            airlines.Searcher
+	Airline            airlines.Airline
 }
 
 func DateFromTo(from, to time.Time) QueryArgument {
@@ -39,7 +39,7 @@ func DestinationAirport(airport string) QueryArgument {
 	}
 }
 
-func Airline(airline airlines.Searcher) QueryArgument {
+func Airline(airline airlines.Airline) QueryArgument {
 	return func(o *queryArguments) {
 		o.Airline = airline
 	}

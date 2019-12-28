@@ -21,9 +21,9 @@ func main() {
 		args = []string{"FUK", "HND", "KIX"}
 	}
 
-	peach, _ := peach.New()
+	airline, _ := peach.New()
 	for _, city := range args {
-		queries := buildQueries(peach, city)
+		queries := buildQueries(airline, city)
 		fetch(queries)
 	}
 }
@@ -49,7 +49,7 @@ func fetch(queries []*flyjapan.Query) {
 	}
 }
 
-func buildQueries(airline airlines.Searcher, city string) []*flyjapan.Query {
+func buildQueries(airline airlines.Airline, city string) []*flyjapan.Query {
 	// Query(From(date), To(date), Airport(), Airport(), SortBy(fn), Airline(), Airline(), RepeatWeeks(n), FilterBy(fn))
 	today := time.Now().Truncate(time.Hour * 24)
 	friday := today.Add(time.Duration(12-int(today.Weekday())%7) * 24 * time.Hour)

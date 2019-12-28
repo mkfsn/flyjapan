@@ -41,7 +41,7 @@ func (q *Query) queryFlights(ctx context.Context) (airlines.Flights, airlines.Fl
 	return inbound, outbound, nil
 }
 
-func fetch(ctx context.Context, airline airlines.Searcher, from, to string, begin, end time.Time) (airlines.Result, error) {
+func fetch(ctx context.Context, airline airlines.Airline, from, to string, begin, end time.Time) (airlines.Result, error) {
 	return airline.Search(ctx, airlines.Query{
 		DepartureDate:        begin,
 		ReturnDate:           end,
