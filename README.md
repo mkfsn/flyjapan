@@ -10,7 +10,7 @@ There are three major LCCs which I'm planning to support in this project:
 | Airline                                           | Status                 |
 |---------------------------------------------------| :---:                  |
 | [Peach](https://booking.flypeach.com/tw/search)   | :white_check_mark:     |
-| [Vanilla](https://www.vanilla-air.com/tw/)        | In Progress            |
+| [Jetstar](https://www.jetstar.com/tw/zh/home)     | In Progress            |
 | [Tiger](https://www.tigerairtw.com/zh-tw/)        | :warning: (see [Tiger Airline](#tiger-airline)) |
 
 
