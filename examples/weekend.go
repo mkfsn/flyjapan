@@ -11,44 +11,66 @@ import (
 	. "github.com/logrusorgru/aurora"
 	"github.com/mkfsn/flyjapan"
 	"github.com/mkfsn/flyjapan/airlines"
+	"github.com/mkfsn/flyjapan/airlines/peach"
 )
 
 func main() {
 	flag.Parse()
 	args := flag.Args()
 	if len(args) == 0 {
-		args = []string{"FUK", "HND", "KIX", "OKA"}
+		args = []string{"FUK", "HND", "KIX"}
 	}
+
+	peach, _ := peach.New()
 	for _, city := range args {
-		fetchByDestination(city)
+		queries := buildQueries(peach, city)
+		fetch(queries)
 	}
 }
 
-func fetchByDestination(city string) {
+func fetch(queries []*flyjapan.Query) {
+	worker := flyjapan.NewWorker(queries)
+	resCh, errCh := worker.Work(context.Background())
+	for resCh != nil && errCh != nil {
+		select {
+		case res, ok := <-resCh:
+			if !ok {
+				resCh = nil
+				break
+			}
+			handleResult(res)
+		case err, ok := <-errCh:
+			if !ok {
+				errCh = nil
+				break
+			}
+			log.Printf("error: %v", err)
+		}
+	}
+}
+
+func buildQueries(airline airlines.Searcher, city string) []*flyjapan.Query {
 	// Query(From(date), To(date), Airport(), Airport(), SortBy(fn), Airline(), Airline(), RepeatWeeks(n), FilterBy(fn))
 	today := time.Now().Truncate(time.Hour * 24)
 	friday := today.Add(time.Duration(12-int(today.Weekday())%7) * 24 * time.Hour)
+
+	queries := make([]*flyjapan.Query, 0)
 	for i := 0; i < 28; i, friday = i+1, friday.Add(time.Hour*24*7) {
 		saturday, sunday, monday := friday.Add(time.Hour*24), friday.Add(time.Hour*24*2), friday.Add(time.Hour*24*3)
-		ch, err := flyjapan.Query(
-			context.Background(),
-			flyjapan.Airline(airlines.AirlinePeach),
+		q := flyjapan.NewQuery(
+			flyjapan.Airline(airline),
 			flyjapan.DestinationAirport(city),
 			flyjapan.SourceAirport("TPE"),
-			flyjapan.ToAndFrom(friday, sunday),
-			flyjapan.ToAndFrom(friday, monday),
-			flyjapan.ToAndFrom(saturday, monday),
+			flyjapan.DateFromTo(friday, sunday),
+			flyjapan.DateFromTo(friday, monday),
+			flyjapan.DateFromTo(saturday, monday),
 		)
-		if err != nil {
-			log.Fatalln("error:", err)
-		}
-		for res := range ch {
-			handleResult(res)
-		}
+		queries = append(queries, q)
 	}
+	return queries
 }
 
-func handleResult(res flyjapan.Result) {
+func handleResult(res *flyjapan.Result) {
 	inBound := res.Inbound.FilterBy(airlines.AvailableFlight)
 	outBound := res.Outbound.FilterBy(airlines.AvailableFlight)
 	sort.Sort(airlines.SortByBaseFare(inBound))
